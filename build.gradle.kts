@@ -4,9 +4,9 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "no.example"
+group = "no.hvl"
 version = "0.0.1-SNAPSHOT"
-description = "Demo project for Spring Boot"
+description = "Poll management app"
 
 java {
 	toolchain {
@@ -22,12 +22,14 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	compileOnly("org.projectlombok:lombok:1.18.38")
+	annotationProcessor("org.projectlombok:lombok:1.18.38")
+	
+	testCompileOnly("org.projectlombok:lombok:1.18.38")
+	testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-
-// bootRun {
-// 	debugOptions
-// }
