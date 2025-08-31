@@ -6,8 +6,19 @@ import org.springframework.stereotype.Component;
 
 import no.hvl.poll_manager.model.Poll;
 import no.hvl.poll_manager.model.User;
+import no.hvl.poll_manager.model.Vote;
 
 @Component
 public class PollManager {
-	HashMap<User, Poll> userPoll;
+	HashMap<Integer, User> users;
+	HashMap<Integer, Poll> polls;
+	HashMap<Integer, Vote> votes;
+
+	public int addUser(User user) {
+		if (users.containsValue(user)) {
+			return -1;
+		}
+		users.put(1, user);
+		return 1;
+	}
 }
