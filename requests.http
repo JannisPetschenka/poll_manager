@@ -49,3 +49,24 @@ GET http://localhost:8080/api/v1/polls HTTP/1.1
 ### 
 
 DELETE http://localhost:8080/api/v1/poll/0 HTTP/1.1
+
+
+### 
+
+GET http://localhost:8080/api/v1/votes/0 HTTP/1.1
+
+
+### 
+
+POST http://localhost:8080/api/v1/votes HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "creatorId": 0,
+  "pollId": 0,
+  "voteOption": {
+    "caption": "Yes",
+    "presentationOrder": 0
+  }
+}

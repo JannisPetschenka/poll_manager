@@ -35,9 +35,9 @@ public class PollsController {
 	@PostMapping(value = "/polls", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<Void> createPoll(@RequestBody PollRequest poll) {
-		return pollManager.addPoll(poll) ? ResponseEntity.ok().build()
-				: ResponseEntity.status(HttpStatus.CONFLICT).build();
+	public ResponseEntity<Poll> createPoll(@RequestBody PollRequest poll) {
+		return pollManager.addPoll(poll).map(p -> ResponseEntity.ok(p))
+				.orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
 	}
 
 	@PutMapping()

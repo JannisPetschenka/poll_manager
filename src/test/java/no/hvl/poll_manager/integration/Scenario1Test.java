@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import no.hvl.poll_manager.controller.PollsController.PollRequest;
 import no.hvl.poll_manager.controller.UsersController.UserRequest;
+import no.hvl.poll_manager.controller.VotesController.VoteRequest;
 import no.hvl.poll_manager.model.VoteOption;
 
 public class Scenario1Test extends ScenarioTest {
@@ -19,53 +20,53 @@ public class Scenario1Test extends ScenarioTest {
 	VoteOption vo2 = new VoteOption("no", 1);
 	PollRequest p1 = new PollRequest(0, "ok", List.of(vo1, vo2), Instant.now());
 	PollRequest p2 = new PollRequest(5, "ok", List.of(vo1, vo2), Instant.now());
+	VoteRequest v1 = new VoteRequest(0, 0, vo1);
 
 	@Test
 	void scenario1() {
 		createUser(u1, true);
 
-		var response1 = getUsers();
-		assertEquals(1, response1.size());
+		var response = getUsers();
+		assertEquals(1, response.size());
 
 		createUser(u1, false);
 
-		var response2 = getUsers();
-		assertEquals(1, response2.size());
+		response = getUsers();
+		assertEquals(1, response.size());
 
 		createUser(u2, true);
 
-		var response3 = getUsers();
-		assertEquals(2, response3.size());
+		response = getUsers();
+		assertEquals(2, response.size());
 
 		createUser(u3, true);
-		var response3_delete = getUsers();
-		assertEquals(3, response3_delete.size());
+		response = getUsers();
+		assertEquals(3, response.size());
 		deleteUser(2);
-		response3_delete = getUsers();
-		assertEquals(2, response3_delete.size());
+		response = getUsers();
+		assertEquals(2, response.size());
 
 		createPoll(p1, true);
 
-		var response4 = getPolls();
-		assertEquals(1, response4.size());
+		response = getPolls();
+		assertEquals(1, response.size());
 
 		createPoll(p2, false);
 
+		response = getVotesForPoll(0);
+		assertEquals(0, response.size());
+		createVote(v1, true);
+		response = getVotesForPoll(0);
+		assertEquals(1, response.size());
+
 		deletePoll(0);
 
-		var response5 = getPolls();
-		assertEquals(0, response5.size());
+		response = getPolls();
+		assertEquals(0, response.size());
+		response = getVotesForPoll(0);
+		assertEquals(0, response.size());
 	}
 
-	// @Test
-	// void vote() {
-	// ResponseEntity<String> response = restTemplate.postForEntity(
-	// "/api/v1/votes",
-	// null,
-	// String.class);
-	// assertEquals(HttpStatus.OK, response.getStatusCode());
-	// }
-	//
 	// @Test
 	// void updateVote() {
 	// ResponseEntity<String> response = restTemplate.exchange(
@@ -74,23 +75,5 @@ public class Scenario1Test extends ScenarioTest {
 	// null,
 	// String.class);
 	// assertEquals(HttpStatus.OK, response.getStatusCode());
-	// }
-	//
-	// @Test
-	// void listVotes() {
-	// ResponseEntity<Vote[]> response = restTemplate.getForEntity(
-	// "/api/v1/votes",
-	// Vote[].class);
-	// assertEquals(HttpStatus.OK, response.getStatusCode());
-	// assertEquals(new Vote(u1, p1, null), response.getBody()[0]);
-	// }
-	//
-	// @Test
-	// void deletePoll() {
-	// restTemplate.delete("/api/v1/polls");
-	// ResponseEntity<Poll[]> response = restTemplate.getForEntity("/api/v1/polls",
-	// Poll[].class);
-	// assertEquals(HttpStatus.OK, response.getStatusCode());
-	// assertEquals(0, response.getBody().length);
 	// }
 }

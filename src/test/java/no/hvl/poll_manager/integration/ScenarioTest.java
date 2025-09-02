@@ -1,6 +1,7 @@
 package no.hvl.poll_manager.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 
 import no.hvl.poll_manager.controller.PollsController.PollRequest;
 import no.hvl.poll_manager.controller.UsersController.UserRequest;
+import no.hvl.poll_manager.controller.VotesController.VoteRequest;
+import no.hvl.poll_manager.model.User;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ScenarioTest {
@@ -25,11 +28,13 @@ public class ScenarioTest {
 	TestRestTemplate restTemplate;
 
 	void createUser(UserRequest user, boolean shouldSucceed) {
-		ResponseEntity<Void> response = restTemplate.postForEntity(
+		ResponseEntity<String> response = restTemplate.postForEntity(
 				"/api/v1/users",
-				user, Void.class);
+				user, String.class);
 		if (shouldSucceed) {
 			assertEquals(HttpStatus.OK, response.getStatusCode());
+			assertTrue(response.getBody().contains(user.username()));
+			assertTrue(response.getBody().contains(user.email()));
 		} else {
 			assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 		}
@@ -54,6 +59,8 @@ public class ScenarioTest {
 				String.class);
 		if (shouldSucceed) {
 			assertEquals(HttpStatus.OK, response.getStatusCode());
+			assertTrue(response.getBody().contains(poll.question()));
+			assertTrue(response.getBody().contains(poll.validUntil().toString()));
 		} else {
 			assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 		}
@@ -69,5 +76,24 @@ public class ScenarioTest {
 
 	void deletePoll(int id) {
 		restTemplate.delete("/api/v1/poll/" + id);
+	}
+
+	void createVote(VoteRequest vote, boolean shouldSucceed) {
+		ResponseEntity<String> response = restTemplate.postForEntity(
+				"/api/v1/votes",
+				vote,
+				String.class);
+		if (shouldSucceed) {
+			assertEquals(HttpStatus.OK, response.getStatusCode());
+		} else {
+			assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+		}
+
+	}
+
+	List getVotesForPoll(int id) {
+		ResponseEntity<List> response = restTemplate.getForEntity("/api/v1/votes/" + id, List.class);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		return response.getBody();
 	}
 }

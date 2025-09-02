@@ -31,9 +31,9 @@ public class UsersController {
 	}
 
 	@PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> createUser(@RequestBody UserRequest user) {
-		return pollManager.addUser(user.username, user.email) ? ResponseEntity.ok().build()
-				: ResponseEntity.status(HttpStatus.CONFLICT).build();
+	public ResponseEntity<User> createUser(@RequestBody UserRequest user) {
+		return pollManager.addUser(user.username, user.email).map(u -> ResponseEntity.ok(u))
+				.orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
 	}
 
 	@PutMapping("/users")
