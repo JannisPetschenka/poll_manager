@@ -8,5 +8,15 @@ public class VoteOption {
 	@NonNull
 	String caption;
 
-	int presentationOrder;
+	Integer presentationOrder;
+
+	public VoteOption(String caption, Integer presentationOrder) {
+		this.caption = caption;
+		this.presentationOrder = presentationOrder;
+	}
+
+	public VoteOption() {
+		this.caption = "";
+		this.presentationOrder = 0;
+	}
 }

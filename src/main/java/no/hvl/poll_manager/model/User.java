@@ -12,6 +12,7 @@ import lombok.Data;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
 @Data
 public class User {
+	Integer id;
 	String username;
 	String email;
 
@@ -21,10 +22,26 @@ public class User {
 	@JsonIdentityReference
 	List<Vote> votesGiven;
 
-	public User(String name, String email) {
+	public User(Integer id, String name, String email) {
+		this.id = id;
 		this.username = name;
 		this.email = email;
 		this.createdPolls = new ArrayList<>();
 		this.votesGiven = new ArrayList<>();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		User user = (User) obj;
+		return username.equals(user.username) || email.equals(user.email);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 }

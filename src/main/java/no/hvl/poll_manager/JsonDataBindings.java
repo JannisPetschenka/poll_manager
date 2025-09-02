@@ -22,13 +22,11 @@ public class JsonDataBindings {
 	}
 
 	public static void buildJson() {
-		User user = new User("hi", "mail");
-		User user1 = new User("hello", "there");
-		VoteOption yes = new VoteOption("Yep");
-		yes.setPresentationOrder(0);
-		VoteOption no = new VoteOption("Nope");
-		no.setPresentationOrder(1);
-		Poll poll = new Poll("Is ok?", List.of(yes, no), Instant.now(), user);
+		User user = new User(1, "hi", "mail");
+		User user1 = new User(0, "hello", "there");
+		VoteOption yes = new VoteOption("Yep", 0);
+		VoteOption no = new VoteOption("Nope", 1);
+		Poll poll = new Poll(0, "Is ok?", List.of(yes, no), Instant.now(), user);
 		Vote u1p1 = new Vote(user1, yes);
 
 		ObjectMapper mapper = initJackson();

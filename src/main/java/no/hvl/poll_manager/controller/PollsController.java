@@ -1,5 +1,6 @@
 package no.hvl.poll_manager.controller;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,38 +16,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import no.hvl.poll_manager.model.User;
+import no.hvl.poll_manager.model.Poll;
+import no.hvl.poll_manager.model.VoteOption;
 import no.hvl.poll_manager.repository.PollManager;
 
 @RestController
 @RequestMapping("/api/v1")
-public class UsersController {
+public class PollsController {
 
 	@Autowired
 	PollManager pollManager;
 
-	@GetMapping("/users")
-	public ResponseEntity<List<User>> getUsers() {
-		return ResponseEntity.ok(pollManager.getUsers());
+	@GetMapping("/polls")
+	public ResponseEntity<List<Poll>> getPolls() {
+		return ResponseEntity.ok(pollManager.getPolls());
 	}
 
-	@PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> createUser(@RequestBody UserRequest user) {
-		return pollManager.addUser(user.username, user.email) ? ResponseEntity.ok().build()
+	@PostMapping(value = "/polls", consumes = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<Void> createPoll(@RequestBody PollRequest poll) {
+		return pollManager.addPoll(poll) ? ResponseEntity.ok().build()
 				: ResponseEntity.status(HttpStatus.CONFLICT).build();
 	}
 
-	@PutMapping("/users")
-	public ResponseEntity<Void> updateUser() {
+	@PutMapping()
+	public ResponseEntity<Void> updatePoll() {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/user/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") int id) {
-		pollManager.deleteUser(id);
+	@DeleteMapping("/poll/{id}")
+	public ResponseEntity<Void> deletePoll(@PathVariable(name = "id") int id) {
+		pollManager.deletePoll(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	public static record UserRequest(String username, String email) {
+	public static record PollRequest(Integer creatorId, String question, List<VoteOption> voteOptions,
+			Instant validUntil) {
 	}
 }
