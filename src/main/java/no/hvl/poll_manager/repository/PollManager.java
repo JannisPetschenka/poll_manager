@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import no.hvl.poll_manager.controller.PollsController.PollRequest;
+import no.hvl.poll_manager.controller.UsersController.UserRequest;
 import no.hvl.poll_manager.controller.VotesController.VoteRequest;
 import no.hvl.poll_manager.model.Poll;
 import no.hvl.poll_manager.model.User;
@@ -40,6 +41,19 @@ public class PollManager {
 		return users;
 	}
 
+	public Optional<User> updateUser(int id, UserRequest user) {
+		for (User u : users) {
+			if (u.getId() == id) {
+				if (user.username() != null)
+					u.setUsername(user.username());
+				if (user.email() != null)
+					u.setEmail(user.email());
+				return Optional.of(u);
+			}
+		}
+		return Optional.empty();
+	}
+
 	public void deleteUser(int id) {
 		users = users.stream().filter(user -> user.getId() != id).toList();
 	}
@@ -57,6 +71,21 @@ public class PollManager {
 
 	public List<Poll> getPolls() {
 		return polls;
+	}
+
+	public Optional<Poll> updatePoll(int id, PollRequest poll) {
+		for (Poll p : polls) {
+			if (p.getId() == id) {
+				if (poll.question() != null)
+					p.setQuestion(poll.question());
+				if (poll.validUntil() != null)
+					p.setValidUntil(poll.validUntil());
+				if (poll.voteOptions() != null)
+					p.setVoteOptions(poll.voteOptions());
+				return Optional.of(p);
+			}
+		}
+		return Optional.empty();
 	}
 
 	public void deletePoll(int id) {

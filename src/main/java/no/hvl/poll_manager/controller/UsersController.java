@@ -36,9 +36,10 @@ public class UsersController {
 				.orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
 	}
 
-	@PutMapping("/users")
-	public ResponseEntity<Void> updateUser() {
-		return ResponseEntity.ok().build();
+	@PutMapping("/user/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable(name = "id") int id, @RequestBody UserRequest user) {
+		return pollManager.updateUser(id, user).map(u -> ResponseEntity.ok(u))
+				.orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
 	}
 
 	@DeleteMapping("/user/{id}")

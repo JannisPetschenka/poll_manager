@@ -12,8 +12,19 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "email": "mail1",
-  "username": "hello1"
+  "email": "mail",
+  "username": "hello"
+}
+
+
+### 
+
+PUT http://localhost:8080/api/v1/user/0 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "mail@hvl.no"
 }
 
 
@@ -36,6 +47,29 @@ Content-Type: application/json
     {
       "caption": "Yes",
       "presentationOrder": 0
+    }
+  ]
+}
+
+
+### 
+
+PUT http://localhost:8080/api/v1/poll/0 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "creatorId": 0,
+  "question": "Do you agree?",
+  "validUntil": "2026-01-01T01:00:00Z",
+  "voteOptions": [
+    {
+      "caption": "Yes",
+      "presentationOrder": 0
+    },
+    {
+      "caption": "No",
+      "presentationOrder": 1
     }
   ]
 }

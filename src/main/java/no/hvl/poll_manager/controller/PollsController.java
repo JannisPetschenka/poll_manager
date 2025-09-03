@@ -40,9 +40,10 @@ public class PollsController {
 				.orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
 	}
 
-	@PutMapping()
-	public ResponseEntity<Void> updatePoll() {
-		return ResponseEntity.ok().build();
+	@PutMapping("/poll/{id}")
+	public ResponseEntity<Poll> updatePoll(@PathVariable(name = "id") int id, @RequestBody PollRequest poll) {
+		return pollManager.updatePoll(id, poll).map(p -> ResponseEntity.ok(p))
+				.orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
 	}
 
 	@DeleteMapping("/poll/{id}")

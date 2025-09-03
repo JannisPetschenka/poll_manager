@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -35,6 +37,24 @@ public class ScenarioTest {
 			assertEquals(HttpStatus.OK, response.getStatusCode());
 			assertTrue(response.getBody().contains(user.username()));
 			assertTrue(response.getBody().contains(user.email()));
+		} else {
+			assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+		}
+	}
+
+	void updateUser(int id, UserRequest user, boolean shouldSucceed) {
+		HttpEntity<UserRequest> entity = new HttpEntity<UserRequest>(user);
+		ResponseEntity<String> response = restTemplate.exchange(
+				"/api/v1/user/" + id,
+				HttpMethod.PUT,
+				entity,
+				String.class);
+		if (shouldSucceed) {
+			assertEquals(HttpStatus.OK, response.getStatusCode());
+			if (user.username() != null)
+				assertTrue(response.getBody().contains(user.username()));
+			if (user.email() != null)
+				assertTrue(response.getBody().contains(user.email()));
 		} else {
 			assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 		}
@@ -76,6 +96,24 @@ public class ScenarioTest {
 
 	void deletePoll(int id) {
 		restTemplate.delete("/api/v1/poll/" + id);
+	}
+
+	void updatePoll(int id, PollRequest poll, boolean shouldSucceed) {
+		HttpEntity<PollRequest> entity = new HttpEntity<PollRequest>(poll);
+		ResponseEntity<String> response = restTemplate.exchange(
+				"/api/v1/poll/" + id,
+				HttpMethod.PUT,
+				entity,
+				String.class);
+		if (shouldSucceed) {
+			assertEquals(HttpStatus.OK, response.getStatusCode());
+			if (poll.question() != null)
+				assertTrue(response.getBody().contains(poll.question()));
+			if (poll.validUntil() != null)
+				assertTrue(response.getBody().contains(poll.validUntil().toString()));
+		} else {
+			assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+		}
 	}
 
 	void createVote(VoteRequest vote, boolean shouldSucceed) {

@@ -14,12 +14,14 @@ import no.hvl.poll_manager.model.VoteOption;
 public class Scenario1Test extends ScenarioTest {
 
 	UserRequest u1 = new UserRequest("u1", "e1");
+	UserRequest u1Update = new UserRequest("u1.1", "e1");
 	UserRequest u2 = new UserRequest("u2", "e2");
 	UserRequest u3 = new UserRequest("u3", "e3");
 	VoteOption vo1 = new VoteOption("yes", 0);
 	VoteOption vo2 = new VoteOption("no", 1);
-	PollRequest p1 = new PollRequest(0, "ok", List.of(vo1, vo2), Instant.now());
-	PollRequest p2 = new PollRequest(5, "ok", List.of(vo1, vo2), Instant.now());
+	PollRequest p1 = new PollRequest(0, "question1", List.of(vo1, vo2), Instant.now());
+	PollRequest p1Update = new PollRequest(0, "question1 new", List.of(vo1, vo2), Instant.now());
+	PollRequest p2 = new PollRequest(5, "question2", List.of(vo1, vo2), Instant.now());
 	VoteRequest v1 = new VoteRequest(0, 0, vo1);
 
 	@Test
@@ -30,6 +32,8 @@ public class Scenario1Test extends ScenarioTest {
 		assertEquals(1, response.size());
 
 		createUser(u1, false);
+		updateUser(0, u1Update, true);
+		updateUser(5, u1Update, false);
 
 		response = getUsers();
 		assertEquals(1, response.size());
@@ -47,6 +51,8 @@ public class Scenario1Test extends ScenarioTest {
 		assertEquals(2, response.size());
 
 		createPoll(p1, true);
+		updatePoll(0, p1Update, true);
+		updatePoll(5, p1Update, false);
 
 		response = getPolls();
 		assertEquals(1, response.size());
