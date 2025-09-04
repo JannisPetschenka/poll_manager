@@ -19,6 +19,7 @@ The biggest difficulty with the implementation of model classes was the cyclical
 - Storing the votes in a `HashMap<Poll, List<Vote>>`
     - Reasoning behind this is, that the UML diagram did not define a connection between a Poll and a Vote. Which would make it impossible to tell which Vote belongs to which Poll.
     - It would be better to fix this issue by adding cyclical definition between a Poll (list/set of votes) and Votes (one poll).
+- The PollManager also checks that when creating a User the User does not already exist.
 
 ### Implementation of the [Tests](./src/test/java/no/hvl/poll_manager/integration/)
 
