@@ -61,6 +61,9 @@ public class PollManager {
 	public Optional<Poll> addPoll(PollRequest poll) {
 		Optional<User> creator = users.stream().filter(user -> user.getId() == poll.creatorId()).findFirst();
 		if (creator.isPresent()) {
+			if (poll.voteOptions().size() > 2) {
+				return Optional.empty();
+			}
 			votes.put(polls.size(), new ArrayList<Vote>());
 			Poll tmp = new Poll(polls.size(), poll.question(), poll.voteOptions(), poll.validUntil(), creator.get());
 			polls.add(tmp);

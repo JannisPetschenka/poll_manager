@@ -41,7 +41,7 @@ Content-Type: application/json
 
 {
   "creatorId": 0,
-  "question": "hello1",
+  "question": "question2",
   "validUntil": "2026-01-01T01:00:00Z",
   "voteOptions": [
     {

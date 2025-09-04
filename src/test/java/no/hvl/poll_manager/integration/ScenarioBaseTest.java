@@ -18,10 +18,9 @@ import org.springframework.http.ResponseEntity;
 import no.hvl.poll_manager.controller.PollsController.PollRequest;
 import no.hvl.poll_manager.controller.UsersController.UserRequest;
 import no.hvl.poll_manager.controller.VotesController.VoteRequest;
-import no.hvl.poll_manager.model.User;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ScenarioTest {
+public class ScenarioBaseTest {
 
 	@LocalServerPort
 	private int port;

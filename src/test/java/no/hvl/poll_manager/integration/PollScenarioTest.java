@@ -11,7 +11,7 @@ import no.hvl.poll_manager.controller.UsersController.UserRequest;
 import no.hvl.poll_manager.controller.VotesController.VoteRequest;
 import no.hvl.poll_manager.model.VoteOption;
 
-public class Scenario1Test extends ScenarioTest {
+public class PollScenarioTest extends ScenarioBaseTest {
 
 	UserRequest u1 = new UserRequest("u1", "e1");
 	UserRequest u1Update = new UserRequest("u1.1", "e1");
@@ -72,14 +72,4 @@ public class Scenario1Test extends ScenarioTest {
 		response = getVotesForPoll(0);
 		assertEquals(0, response.size());
 	}
-
-	// @Test
-	// void updateVote() {
-	// ResponseEntity<String> response = restTemplate.exchange(
-	// "/api/v1/votes",
-	// HttpMethod.PUT,
-	// null,
-	// String.class);
-	// assertEquals(HttpStatus.OK, response.getStatusCode());
-	// }
 }
