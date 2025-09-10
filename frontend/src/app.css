@@ -1,0 +1,49 @@
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  }
+
+  
+  .btn-blue {
+    background-color: #007bff;  
+  }
+
+  .btn-blue:hover {
+    background-color: #0056b3;  
+    transform: translateY(-2px);  
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); 
+  }
+
+  .btn-blue:active {
+    background-color: #004085;  
+  }
+
+  
+  .btn-green {
+    background-color: #28a745;  
+  }
+
+  .btn-green:hover {
+    background-color: #218838;  
+    transform: translateY(-2px);  
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); 
+  }
+
+  .btn-green:active {
+    background-color: #1e7e34;  
+  }
+
+  
+  .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5); 
+  }

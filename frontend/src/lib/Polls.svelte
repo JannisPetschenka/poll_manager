@@ -30,7 +30,7 @@
 				<span>{option.caption}</span>
 				<button
 					type="button"
-					class="voteOptionButton"
+					class="btn btn-blue btn-vote-option"
 					on:click={() => exec(pollIndex, voteIndex)}
 				>
 					Vote
@@ -38,10 +38,14 @@
 			</div>
 		{/each}
 		{#if poll.votes}
-			Votes:
-			{#each Object.entries(poll.votes) as [caption, voteCount]}
-				<li>{caption}: {voteCount} votes</li>
-			{/each}
+			<div class="voteContainer">
+				Votes:
+				{#each Object.entries(poll.votes) as [caption, voteCount]}
+					<div class="votes">
+						{caption}: {voteCount} votes
+					</div>
+				{/each}
+			</div>
 		{/if}
 	</fieldset>
 {/each}
@@ -61,9 +65,17 @@
 	.voteOption {
 		padding: 5px;
 		background-color: darkgray;
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
-	.voteOptionButton {
-		float: right;
+	.voteContainer {
+		margin-top: 5px;
+		border: 2px solid;
+	}
+	.votes {
+		border-top: 1px solid;
 	}
 </style>
