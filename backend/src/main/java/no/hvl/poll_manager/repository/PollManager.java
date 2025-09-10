@@ -28,15 +28,15 @@ public class PollManager {
 		this.users = new ArrayList<>();
 		this.polls = new ArrayList<>();
 		this.votes = new HashMap<>();
-		// this.addUser("admin", "admin@hvl.no");
-		// this.addUser("u1", "u1@hvl.no");
-		// this.addUser("u2", "u2@hvl.no");
-		// this.addPoll(new PollRequest(0, "Agree?", List.of(new VoteOption("yes", 0),
-		// new VoteOption("no", 1)),
-		// Instant.now()));
-		// this.addPoll(new PollRequest(0, "Again?", List.of(new VoteOption("yes", 0),
-		// new VoteOption("no", 1)),
-		// Instant.now()));
+		this.addUser("admin", "admin@hvl.no");
+		this.addUser("u1", "u1@hvl.no");
+		this.addUser("u2", "u2@hvl.no");
+		this.addPoll(new PollRequest(0, "Agree?", List.of(new VoteOption("yes", 0),
+				new VoteOption("no", 1)),
+				Instant.now()));
+		this.addPoll(new PollRequest(0, "Again?", List.of(new VoteOption("yes", 0),
+				new VoteOption("no", 1)),
+				Instant.now()));
 	}
 
 	public Optional<User> addUser(String username, String email) {

@@ -29,33 +29,33 @@ public class PollScenarioTest extends ScenarioBaseTest {
 		createUser(u1, true);
 
 		var response = getUsers();
-		assertEquals(1, response.size());
+		assertEquals(4, response.size());
 
 		createUser(u1, false);
-		updateUser(0, u1Update, true);
-		updateUser(5, u1Update, false);
+		updateUser(3, u1Update, true);
+		updateUser(6, u1Update, false);
 
 		response = getUsers();
-		assertEquals(1, response.size());
+		assertEquals(4, response.size());
 
 		createUser(u2, true);
 
 		response = getUsers();
-		assertEquals(2, response.size());
+		assertEquals(5, response.size());
 
 		createUser(u3, true);
 		response = getUsers();
-		assertEquals(3, response.size());
-		deleteUser(2);
+		assertEquals(6, response.size());
+		deleteUser(5);
 		response = getUsers();
-		assertEquals(2, response.size());
+		assertEquals(5, response.size());
 
 		createPoll(p1, true);
-		updatePoll(0, p1Update, true);
-		updatePoll(5, p1Update, false);
+		updatePoll(2, p1Update, true);
+		updatePoll(9, p1Update, false);
 
 		response = getPolls();
-		assertEquals(1, response.size());
+		assertEquals(3, response.size());
 
 		createPoll(p2, false);
 
@@ -68,7 +68,7 @@ public class PollScenarioTest extends ScenarioBaseTest {
 		deletePoll(0);
 
 		response = getPolls();
-		assertEquals(0, response.size());
+		assertEquals(2, response.size());
 		response = getVotesForPoll(0);
 		assertEquals(0, response.size());
 	}

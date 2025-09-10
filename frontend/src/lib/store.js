@@ -1,10 +1,20 @@
 import { writable } from 'svelte/store';
 
+export const users = writable([]);
 export const user = writable({});
 export const polls = writable([]);
 
 let creatorId;
 user.subscribe(u => creatorId = u.id);
+
+export async function getUsers() {
+	fetch("/api/v1/users")
+		.then(response => response.json())
+		.then(data => {
+			users.set(data);
+			user.set(data[0]);
+		});
+}
 
 export async function updatePolls() {
 	await fetch("/api/v1/polls")
