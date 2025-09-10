@@ -16,7 +16,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-reports  # Artifact name
-          path: build/reports/tests/test  # Path to the test report directory
+          path: backend/build/reports/tests/test  # Path to the test report directory
   build:
     runs-on: ubuntu-latest
     steps:

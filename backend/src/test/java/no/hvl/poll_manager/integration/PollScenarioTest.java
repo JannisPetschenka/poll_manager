@@ -13,10 +13,10 @@ import no.hvl.poll_manager.model.VoteOption;
 
 public class PollScenarioTest extends ScenarioBaseTest {
 
-	UserRequest u1 = new UserRequest("u1", "e1");
-	UserRequest u1Update = new UserRequest("u1.1", "e1");
-	UserRequest u2 = new UserRequest("u2", "e2");
-	UserRequest u3 = new UserRequest("u3", "e3");
+	UserRequest u1 = new UserRequest("test_u1", "e1");
+	UserRequest u1Update = new UserRequest("test_u1.1", "e1");
+	UserRequest u2 = new UserRequest("test_u2", "e2");
+	UserRequest u3 = new UserRequest("test_u3", "e3");
 	VoteOption vo1 = new VoteOption("yes", 0);
 	VoteOption vo2 = new VoteOption("no", 1);
 	PollRequest p1 = new PollRequest(0, "question1", List.of(vo1, vo2), Instant.now());
