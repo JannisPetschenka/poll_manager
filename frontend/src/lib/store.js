@@ -10,18 +10,6 @@ export async function updatePolls() {
 	await fetch("/api/v1/polls")
             .then( response => response.json() )
             .then( data => {
-				// for (let poll of data) {
-				// 	fetch("/api/v1/votes/" + poll.id)
-				// 		.then(response => response.json())
-				// 		.then(data => {
-				// 			poll.votes = poll.votes ?? {};
-				//
-				// 			for (let vote of data) {
-				// 				const caption = vote.voteOption.caption;
-				// 				poll.votes[caption] = (poll.votes[caption] ?? 0) + 1;
-				// 			}
-				// 		});
-				// }
 				polls.set(data);
 			})
 }
@@ -64,4 +52,5 @@ export async function vote(pollId, voteOption) {
 		headers: {"Content-Type": "application/json"},
 		body: JSON.stringify(vote),
 	})
+	await updatePolls()
 }

@@ -1,7 +1,9 @@
 package no.hvl.poll_manager.model;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -26,6 +28,8 @@ public class Poll {
 	@JsonManagedReference
 	List<VoteOption> voteOptions;
 
+	Map<String, Integer> votes;
+
 	public Poll(Integer id, String question, List<VoteOption> voteOptions, Instant validUntil, User creator) {
 		this.id = id;
 		this.question = question;
@@ -34,5 +38,6 @@ public class Poll {
 		this.creator = creator;
 		this.publishedAt = Instant.now();
 		this.creator.createdPolls.add(this);
+		this.votes = new HashMap<>();
 	}
 }

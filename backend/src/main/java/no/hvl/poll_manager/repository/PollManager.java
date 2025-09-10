@@ -82,6 +82,18 @@ public class PollManager {
 	}
 
 	public List<Poll> getPolls() {
+		for (var poll : this.polls) {
+			List<Vote> votes = getVotesForPoll(poll.getId());
+			poll.setVotes(new HashMap<>());
+			for (var vote : votes) {
+				var caption = vote.getVoteOption().getCaption();
+				if (poll.getVotes().containsKey(caption)) {
+					poll.getVotes().replace(caption, poll.getVotes().get(caption) + 1);
+				} else {
+					poll.getVotes().put(caption, 1);
+				}
+			}
+		}
 		return polls;
 	}
 

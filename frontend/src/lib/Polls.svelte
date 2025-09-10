@@ -37,12 +37,12 @@
 				</button>
 			</div>
 		{/each}
-		<!-- {#if poll.votes} -->
-		<!-- 	Votes: -->
-		<!-- 	{#each Object.entries(poll.votes) as [caption, voteCount]} -->
-		<!-- 		<li>{caption}: {voteCount} votes</li> -->
-		<!-- 	{/each} -->
-		<!-- {/if} -->
+		{#if poll.votes}
+			Votes:
+			{#each Object.entries(poll.votes) as [caption, voteCount]}
+				<li>{caption}: {voteCount} votes</li>
+			{/each}
+		{/if}
 	</fieldset>
 {/each}
 
