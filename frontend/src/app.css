@@ -27,6 +27,20 @@
     background-color: #004085;  
   }
 
+  .btn-red {
+    background-color: #ff0b00;  
+  }
+
+  .btn-red:hover {
+    background-color: #b30600;  
+    transform: translateY(-2px);  
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); 
+  }
+
+  .btn-red:active {
+    background-color: #850000;  
+  }
+
   
   .btn-green {
     background-color: #28a745;  

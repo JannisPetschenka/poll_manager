@@ -1,23 +1,27 @@
 <script>
 	import { onMount } from "svelte";
-	import { polls, updatePolls, vote } from "./store.js";
+	import { user, polls, updatePolls, vote, deletePoll } from "./store.js";
 
 	onMount(async () => {
 		await updatePolls();
 	});
 
-	polls.set([
-		{
-			question: "question",
-			voteOptions: [{ caption: "hi", presentationOrder: 0 }],
-			votes: { "Option A": 5, "Option B": 3 },
-		},
-	]);
+	function pollBelongsToCurrentUser(poll) {
+		if (typeof poll.creator == "number") {
+			return poll.creator === $user.id;
+		} else {
+			return poll.creator.id === $user.id;
+		}
+	}
 
 	function exec(pollId, voteOptionId) {
 		const poll = $polls[pollId];
 		const voteOption = poll.voteOptions[voteOptionId];
 		vote(poll.id, voteOption);
+	}
+
+	function execPollDelete(pollId) {
+		deletePoll(pollId);
 	}
 </script>
 
@@ -31,7 +35,7 @@
 				<button
 					type="button"
 					class="btn btn-blue btn-vote-option"
-					on:click={() => exec(pollIndex, voteIndex)}
+					on:click={() => exec(poll.id, voteIndex)}
 				>
 					Vote
 				</button>
@@ -46,6 +50,12 @@
 					</div>
 				{/each}
 			</div>
+		{/if}
+		{#if pollBelongsToCurrentUser(poll)}
+			<button
+				class="btn btn-red btn-delete"
+				on:click={() => execPollDelete(poll.id)}>Delete Poll</button
+			>
 		{/if}
 	</fieldset>
 {/each}
@@ -77,5 +87,9 @@
 	}
 	.votes {
 		border-top: 1px solid;
+	}
+
+	.btn-delete {
+		margin-top: 10px;
 	}
 </style>

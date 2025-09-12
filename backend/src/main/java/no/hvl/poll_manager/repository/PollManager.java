@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -115,7 +116,7 @@ public class PollManager {
 	}
 
 	public void deletePoll(int id) {
-		polls = polls.stream().filter(poll -> poll.getId() != id).toList();
+		polls = polls.stream().filter(poll -> poll.getId() != id).collect(Collectors.toCollection(ArrayList::new));
 		votes.remove(id);
 	}
 

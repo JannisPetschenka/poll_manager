@@ -45,6 +45,13 @@ export async function createPoll(validDate, question, voteOptions) {
 	await updatePolls()
 }
 
+export async function deletePoll(pollId) {
+	await fetch("/api/v1/poll/"+pollId, {
+		method: "DELETE"
+	});
+	await updatePolls();
+}
+
 export async function vote(pollId, voteOption) {
 	if (creatorId === null || creatorId === undefined) {
 		window.alert("Select an User first");
