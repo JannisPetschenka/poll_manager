@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -26,7 +27,7 @@ public class JsonDataBindings {
 		User user1 = new User(0, "hello", "there");
 		VoteOption yes = new VoteOption("Yep", 0);
 		VoteOption no = new VoteOption("Nope", 1);
-		Poll poll = new Poll(0, "Is ok?", List.of(yes, no), Instant.now(), user);
+		Poll poll = new Poll(0, "Is ok?", Set.of(yes, no), Instant.now(), user);
 		Vote u1p1 = new Vote(user1, yes);
 
 		ObjectMapper mapper = initJackson();

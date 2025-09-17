@@ -1,7 +1,11 @@
 package no.hvl.poll_manager.model;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -17,17 +21,17 @@ public class User {
 	String email;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	List<Poll> createdPolls;
+	Set<Poll> created;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	List<Vote> votesGiven;
+	Set<Vote> votesGiven;
 
 	public User(Integer id, String name, String email) {
 		this.id = id;
 		this.username = name;
 		this.email = email;
-		this.createdPolls = new ArrayList<>();
-		this.votesGiven = new ArrayList<>();
+		this.created = new LinkedHashSet<>();
+		this.votesGiven = new LinkedHashSet<>();
 	}
 
 	@Override
@@ -43,5 +47,34 @@ public class User {
 	@Override
 	public int hashCode() {
 		return super.hashCode();
+	}
+
+	/**
+	 * Creates a new User object with given username and email.
+	 * The id of a new user object gets determined by the database.
+	 */
+	public User(String username, String email) {
+		this.username = username;
+		this.email = email;
+		this.created = new LinkedHashSet<>();
+	}
+
+	/**
+	 * Creates a new Poll object for this user
+	 * with the given poll question
+	 * and returns it.
+	 */
+	public Poll createPoll(String question) {
+		Poll poll = new Poll(question, Collections.emptySet(), Instant.now(), this);
+		return poll;
+	}
+
+	/**
+	 * Creates a new Vote for a given VoteOption in a Poll
+	 * and returns the Vote as an object.
+	 */
+	public Vote voteFor(VoteOption option) {
+		Vote vote = new Vote(this, option);
+		return vote;
 	}
 }

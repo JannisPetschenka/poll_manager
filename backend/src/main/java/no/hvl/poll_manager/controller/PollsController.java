@@ -2,6 +2,7 @@ package no.hvl.poll_manager.controller;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class PollsController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	public static record PollRequest(Integer creatorId, String question, List<VoteOption> voteOptions,
+	public static record PollRequest(Integer creatorId, String question, Set<VoteOption> voteOptions,
 			Instant validUntil) {
 	}
 }

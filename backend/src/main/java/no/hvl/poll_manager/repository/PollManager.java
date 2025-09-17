@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -32,10 +33,10 @@ public class PollManager {
 		this.addUser("admin", "admin@hvl.no");
 		this.addUser("u1", "u1@hvl.no");
 		this.addUser("u2", "u2@hvl.no");
-		this.addPoll(new PollRequest(0, "Agree?", List.of(new VoteOption("yes", 0),
+		this.addPoll(new PollRequest(0, "Agree?", Set.of(new VoteOption("yes", 0),
 				new VoteOption("no", 1)),
 				Instant.now()));
-		this.addPoll(new PollRequest(0, "Again?", List.of(new VoteOption("yes", 0),
+		this.addPoll(new PollRequest(0, "Again?", Set.of(new VoteOption("yes", 0),
 				new VoteOption("no", 1)),
 				Instant.now()));
 	}

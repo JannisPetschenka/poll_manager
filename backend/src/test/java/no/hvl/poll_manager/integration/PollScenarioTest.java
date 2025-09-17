@@ -3,7 +3,7 @@ package no.hvl.poll_manager.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import no.hvl.poll_manager.controller.PollsController.PollRequest;
@@ -19,9 +19,9 @@ public class PollScenarioTest extends ScenarioBaseTest {
 	UserRequest u3 = new UserRequest("test_u3", "e3");
 	VoteOption vo1 = new VoteOption("yes", 0);
 	VoteOption vo2 = new VoteOption("no", 1);
-	PollRequest p1 = new PollRequest(0, "question1", List.of(vo1, vo2), Instant.now());
-	PollRequest p1Update = new PollRequest(0, "question1 new", List.of(vo1, vo2), Instant.now());
-	PollRequest p2 = new PollRequest(5, "question2", List.of(vo1, vo2), Instant.now());
+	PollRequest p1 = new PollRequest(0, "question1", Set.of(vo1, vo2), Instant.now());
+	PollRequest p1Update = new PollRequest(0, "question1 new", Set.of(vo1, vo2), Instant.now());
+	PollRequest p2 = new PollRequest(5, "question2", Set.of(vo1, vo2), Instant.now());
 	VoteRequest v1 = new VoteRequest(0, 0, vo1);
 
 	@Test
