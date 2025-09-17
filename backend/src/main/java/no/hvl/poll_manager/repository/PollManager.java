@@ -86,18 +86,18 @@ public class PollManager {
 	}
 
 	public List<Poll> getPolls() {
-		for (var poll : this.polls) {
-			List<Vote> votes = getVotesForPoll(poll.getId());
-			poll.setVotes(new HashMap<>());
-			for (var vote : votes) {
-				var caption = vote.getVoteOption().getCaption();
-				if (poll.getVotes().containsKey(caption)) {
-					poll.getVotes().replace(caption, poll.getVotes().get(caption) + 1);
-				} else {
-					poll.getVotes().put(caption, 1);
-				}
-			}
-		}
+		// for (var poll : this.polls) {
+		// List<Vote> votes = getVotesForPoll(poll.getId());
+		// poll.setVotes(new HashMap<>());
+		// for (var vote : votes) {
+		// var caption = vote.getVoteOption().getCaption();
+		// if (poll.getVotes().containsKey(caption)) {
+		// poll.getVotes().replace(caption, poll.getVotes().get(caption) + 1);
+		// } else {
+		// poll.getVotes().put(caption, 1);
+		// }
+		// }
+		// }
 		return polls;
 	}
 
@@ -109,7 +109,7 @@ public class PollManager {
 				if (poll.validUntil() != null)
 					p.setValidUntil(poll.validUntil());
 				if (poll.voteOptions() != null)
-					p.setVoteOptions(poll.voteOptions());
+					p.setOptions(poll.voteOptions());
 				return Optional.of(p);
 			}
 		}

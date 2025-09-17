@@ -1,18 +1,58 @@
 package no.hvl.poll_manager.model;
 
-import lombok.Data;
-import lombok.NonNull;
+import java.util.Collection;
+import java.util.Collections;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Entity
+@Table(name = "voteOptions")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 @Data
 public class VoteOption {
-	@NonNull
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Integer id;
+
 	String caption;
 
 	Integer presentationOrder;
 
+	@ManyToOne
+	@JoinColumn(name = "poll_id")
+	@JsonIdentityReference(alwaysAsId = true)
+	Poll poll;
+
 	public VoteOption(String caption, Integer presentationOrder) {
 		this.caption = caption;
 		this.presentationOrder = presentationOrder;
+		// this.poll = null;
+	}
+
+	//
+	public VoteOption(String caption, Poll poll) {
+		this.caption = caption;
+		this.presentationOrder = poll.options.size();
+		// Poll p = poll;
+		// p.setOptions(Collections.emptySet());
+		poll.options.add(this);
+		this.poll = poll;
+		// this.poll.options.add(this);
+
+		// this.poll = poll;
+		// poll.options.add(this);
 	}
 
 	public VoteOption() {

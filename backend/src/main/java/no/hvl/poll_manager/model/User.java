@@ -1,28 +1,40 @@
 package no.hvl.poll_manager.model;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 
+@Entity
+@Table(name = "users")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data
 public class User {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
+
 	String username;
+
 	String email;
 
+	@OneToMany
 	@JsonIdentityReference(alwaysAsId = true)
 	Set<Poll> created;
 
+	@OneToMany
 	@JsonIdentityReference(alwaysAsId = true)
 	Set<Vote> votesGiven;
 
@@ -32,6 +44,10 @@ public class User {
 		this.email = email;
 		this.created = new LinkedHashSet<>();
 		this.votesGiven = new LinkedHashSet<>();
+	}
+
+	public User() {
+
 	}
 
 	@Override
@@ -57,6 +73,7 @@ public class User {
 		this.username = username;
 		this.email = email;
 		this.created = new LinkedHashSet<>();
+		this.votesGiven = new LinkedHashSet<>();
 	}
 
 	/**
