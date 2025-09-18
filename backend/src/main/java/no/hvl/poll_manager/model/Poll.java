@@ -42,8 +42,8 @@ public class Poll {
 
 	Instant validUntil;
 
-	@OneToMany
-	@JsonManagedReference
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JsonIdentityReference
 	Set<VoteOption> options;
 
 	// Map<String, Integer> votes;
