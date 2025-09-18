@@ -38,21 +38,14 @@ public class VoteOption {
 	public VoteOption(String caption, Integer presentationOrder) {
 		this.caption = caption;
 		this.presentationOrder = presentationOrder;
-		// this.poll = null;
 	}
 
 	//
 	public VoteOption(String caption, Poll poll) {
 		this.caption = caption;
 		this.presentationOrder = poll.options.size();
-		// Poll p = poll;
-		// p.setOptions(Collections.emptySet());
 		poll.options.add(this);
 		this.poll = poll;
-		// this.poll.options.add(this);
-
-		// this.poll = poll;
-		// poll.options.add(this);
 	}
 
 	public VoteOption() {

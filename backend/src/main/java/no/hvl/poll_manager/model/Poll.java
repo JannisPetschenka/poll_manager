@@ -1,18 +1,16 @@
 package no.hvl.poll_manager.model;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,8 +18,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "polls")
@@ -42,11 +38,9 @@ public class Poll {
 
 	Instant validUntil;
 
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JsonIdentityReference
 	Set<VoteOption> options;
-
-	// Map<String, Integer> votes;
 
 	public Poll() {
 	}
@@ -59,7 +53,6 @@ public class Poll {
 		this.createdBy = creator;
 		this.publishedAt = Instant.now();
 		this.createdBy.created.add(this);
-		// this.votes = new HashMap<>();
 	}
 
 	public Poll(String question, Set<VoteOption> voteOptions, Instant validUntil, User creator) {
@@ -69,7 +62,6 @@ public class Poll {
 		this.createdBy = creator;
 		this.publishedAt = Instant.now();
 		this.createdBy.created.add(this);
-		// this.votes = new HashMap<>();
 	}
 
 	/**

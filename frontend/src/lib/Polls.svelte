@@ -7,16 +7,16 @@
 	});
 
 	function pollBelongsToCurrentUser(poll) {
-		if (typeof poll.creator == "number") {
-			return poll.creator === $user.id;
+		if (typeof poll.createdBy == "number") {
+			return poll.createdBy === $user.id;
 		} else {
-			return poll.creator.id === $user.id;
+			return poll.createdBy.id === $user.id;
 		}
 	}
 
 	function exec(pollId, voteOptionId) {
 		const poll = $polls[pollId];
-		const voteOption = poll.voteOptions[voteOptionId];
+		const voteOption = poll.options[voteOptionId];
 		vote(poll.id, voteOption);
 	}
 
@@ -29,7 +29,7 @@
 	<fieldset>
 		<legend>Poll number: {pollIndex}</legend>
 		<h3>{poll.question}</h3>
-		{#each poll.voteOptions as option, voteIndex}
+		{#each poll.options as option, voteIndex}
 			<div class="voteOption">
 				<span>{option.caption}</span>
 				<button

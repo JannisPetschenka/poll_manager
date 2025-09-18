@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,21 +31,13 @@ public class User {
 
 	String email;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JsonIdentityReference(alwaysAsId = true)
 	Set<Poll> created;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JsonIdentityReference(alwaysAsId = true)
 	Set<Vote> votesGiven;
-
-	public User(Integer id, String name, String email) {
-		this.id = id;
-		this.username = name;
-		this.email = email;
-		this.created = new LinkedHashSet<>();
-		this.votesGiven = new LinkedHashSet<>();
-	}
 
 	public User() {
 

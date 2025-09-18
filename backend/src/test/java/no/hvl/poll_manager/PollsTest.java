@@ -12,7 +12,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-// TODO: you may have to adjust the imports to import the domain model entities
 import no.hvl.poll_manager.model.Poll;
 import no.hvl.poll_manager.model.User;
 import no.hvl.poll_manager.model.VoteOption;

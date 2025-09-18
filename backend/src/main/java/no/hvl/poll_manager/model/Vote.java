@@ -38,4 +38,7 @@ public class Vote {
 		this.publishedAt = Instant.now();
 		this.voter.votesGiven.add(this);
 	}
+
+	public Vote() {
+	}
 }
