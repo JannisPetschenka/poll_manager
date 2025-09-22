@@ -87,7 +87,7 @@ DELETE http://localhost:8080/api/v1/poll/0 HTTP/1.1
 
 ### 
 
-GET http://localhost:8080/api/v1/votes/0 HTTP/1.1
+GET http://localhost:8080/api/v1/votes/1 HTTP/1.1
 
 
 ### 
@@ -97,10 +97,10 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "creatorId": 0,
-  "pollId": 0,
+  "creatorId": 3,
+  "pollId": 1,
   "voteOption": {
-    "caption": "Yes",
+    "caption": "Vim",
     "presentationOrder": 0
   }
 }

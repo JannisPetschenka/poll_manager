@@ -1,10 +1,11 @@
 package no.hvl.poll_manager.repository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -14,13 +15,19 @@ import no.hvl.poll_manager.controller.UsersController.UserRequest;
 import no.hvl.poll_manager.controller.VotesController.VoteRequest;
 import no.hvl.poll_manager.model.Poll;
 import no.hvl.poll_manager.model.User;
+import redis.clients.jedis.UnifiedJedis;
 import no.hvl.poll_manager.model.Vote;
 import no.hvl.poll_manager.model.VoteOption;
+import no.hvl.poll_manager.model.VoteOptionCount;
 
 @Component
 public class PollManager {
 
 	private EntityManagerFactory emf;
+
+	private UnifiedJedis jedis;
+
+	private Gson gson;
 
 	public PollManager() {
 		EntityManagerFactory emf = new PersistenceConfiguration("polls")
@@ -35,6 +42,12 @@ public class PollManager {
 				.property("spring.h2.console.enabled", true)
 				.createEntityManagerFactory();
 		this.emf = emf;
+
+		// Redis connection
+		this.jedis = new UnifiedJedis("redis://localhost:6379");
+		// Gson mapper to convert objects to string.
+		// This simplifies saving objects with redis.
+		this.gson = new Gson();
 	}
 
 	public Optional<User> addUser(String username, String email) {
@@ -152,30 +165,68 @@ public class PollManager {
 	}
 
 	public List<Vote> getVotesForPoll(int id) {
-		// if (votes.containsKey(id)) {
-		// return votes.get(id);
-		// }
-		return Collections.emptyList();
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+		List<Vote> votes = em.createQuery("SELECT v FROM Vote v WHERE v.poll.id = :id", Vote.class)
+				.setParameter("id", id).getResultList();
+		return votes;
 	}
 
-	public Optional<Vote> addVoteForPoll(VoteRequest vote) {
+	private List<VoteOptionCount> retreiveVoteCountFromPollFromDB(int id) {
 		EntityManager em = emf.createEntityManager();
-
 		em.getTransaction().begin();
-		User u = em.find(User.class, vote.creatorId());
 
-		em.persist(u.voteFor(vote.voteOption()));
+		List<VoteOptionCount> result = em.createQuery("""
+				SELECT o.caption, COUNT(v.id)
+				FROM VoteOption o
+				INNER JOIN Vote v on o.id = v.votesOn.id
+				WHERE o.poll.id = :poll_id
+				GROUP BY o.presentationOrder
+				ORDER BY o.presentationOrder
+								""", VoteOptionCount.class).setParameter("poll_id", id).getResultList();
 
 		em.getTransaction().commit();
 		em.close();
 
-		// Optional<User> creator = users.stream().filter(user -> user.getId() ==
-		// vote.creatorId()).findFirst();
-		// if (creator.isPresent() && votes.containsKey(vote.pollId())) {
-		// Vote tmp = new Vote(creator.get(), vote.voteOption());
-		// votes.get(vote.pollId()).add(tmp);
-		// return Optional.of(tmp);
-		// }
-		return Optional.empty();
+		return result;
+	}
+
+	public VoteOptionCount[] getVoteCountForPoll(int id) {
+		String cachedVoteOptionCount = jedis.get("poll:" + id);
+		if (cachedVoteOptionCount == null) {
+			List<VoteOptionCount> fromDB = retreiveVoteCountFromPollFromDB(id);
+			String cacheString = gson.toJson(fromDB);
+			// Set voteOptionCount in redis and set expiration to 200
+			jedis.setex("poll:" + id, 200, cacheString);
+			return fromDB.toArray(new VoteOptionCount[0]);
+		} else {
+			VoteOptionCount[] voc = gson.fromJson(cachedVoteOptionCount, VoteOptionCount[].class);
+			return voc;
+		}
+	}
+
+	public Optional<Vote> addVoteForPoll(VoteRequest vote) {
+		System.out.println(vote);
+		EntityManager em = emf.createEntityManager();
+
+		em.getTransaction().begin();
+		VoteOption vo = em
+				.createQuery("SELECT o FROM VoteOption o WHERE o.poll.id = :poll_id AND o.caption = :caption",
+						VoteOption.class)
+				.setParameter("poll_id", vote.pollId()).setParameter("caption", vote.voteOption().getCaption())
+				.getSingleResult();
+
+		User u = em.find(User.class, vote.creatorId());
+
+		Vote v = u.voteFor(vo);
+		em.persist(v);
+
+		// Invalidate/remove voteOptionCount for specific vote
+		jedis.del("poll:" + vo.getPoll().getId());
+
+		em.getTransaction().commit();
+		em.close();
+		return Optional.of(v);
 	}
 }

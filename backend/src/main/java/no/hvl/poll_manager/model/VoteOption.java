@@ -1,11 +1,8 @@
 package no.hvl.poll_manager.model;
 
-import java.util.Collection;
-import java.util.Collections;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
@@ -40,7 +37,6 @@ public class VoteOption {
 		this.presentationOrder = presentationOrder;
 	}
 
-	//
 	public VoteOption(String caption, Poll poll) {
 		this.caption = caption;
 		this.presentationOrder = poll.options.size();

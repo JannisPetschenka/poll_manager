@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import no.hvl.poll_manager.model.Vote;
 import no.hvl.poll_manager.model.VoteOption;
+import no.hvl.poll_manager.model.VoteOptionCount;
 import no.hvl.poll_manager.repository.PollManager;
 
 @RestController
@@ -25,8 +26,8 @@ public class VotesController {
 	private PollManager pollManager;
 
 	@GetMapping("/votes/{id}")
-	public ResponseEntity<List<Vote>> getVotes(@PathVariable("id") int id) {
-		return ResponseEntity.ok(pollManager.getVotesForPoll(id));
+	public ResponseEntity<VoteOptionCount[]> getVotes(@PathVariable("id") int id) {
+		return ResponseEntity.ok(pollManager.getVoteCountForPoll(id));
 	}
 
 	@PostMapping(value = "/votes", consumes = MediaType.APPLICATION_JSON_VALUE)
