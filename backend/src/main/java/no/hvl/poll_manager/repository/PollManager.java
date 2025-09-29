@@ -3,6 +3,8 @@ package no.hvl.poll_manager.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -28,6 +30,9 @@ public class PollManager {
 	private UnifiedJedis jedis;
 
 	private Gson gson;
+
+	@Autowired
+	RabbitTemplate rabbitTemplate;
 
 	public PollManager() {
 		EntityManagerFactory emf = new PersistenceConfiguration("polls")
@@ -105,8 +110,7 @@ public class PollManager {
 		EntityManager em = emf.createEntityManager();
 
 		em.getTransaction().begin();
-		User user = em.createQuery("select u from User u where u.id like :id", User.class)
-				.setParameter("id", poll.creatorId()).getSingleResult();
+		User user = em.find(User.class, poll.creatorId());
 		Poll p = user.createPoll(poll.question());
 		for (VoteOption v : poll.voteOptions()) {
 			// VoteOption vo = p.addVoteOption(v.getCaption());
@@ -118,7 +122,14 @@ public class PollManager {
 		em.getTransaction().commit();
 		em.close();
 
+		createRabbitTopic(p.getId());
+
 		return Optional.of(p);
+	}
+
+	private void createRabbitTopic(int pollId) {
+		String routingKey = "poll." + pollId;
+		rabbitTemplate.convertAndSend("pollsExchange", routingKey, "New poll created with ID: " + pollId);
 	}
 
 	public List<Poll> getPolls() {
@@ -207,7 +218,6 @@ public class PollManager {
 	}
 
 	public Optional<Vote> addVoteForPoll(VoteRequest vote) {
-		System.out.println(vote);
 		EntityManager em = emf.createEntityManager();
 
 		em.getTransaction().begin();
@@ -220,6 +230,31 @@ public class PollManager {
 		User u = em.find(User.class, vote.creatorId());
 
 		Vote v = u.voteFor(vo);
+		em.persist(v);
+
+		// Invalidate/remove voteOptionCount for specific vote
+		jedis.del("poll:" + vo.getPoll().getId());
+
+		String routingKey = "poll." + vo.getPoll().getId();
+		rabbitTemplate.convertAndSend("pollsExchange", routingKey, "New vote on poll: " + vo.getPoll().getId() + " with option: "+vo.getCaption());
+
+		em.getTransaction().commit();
+		em.close();
+		return Optional.of(v);
+	}
+
+	public Optional<Vote> addVoteForPollAnonymous(Integer pollId, String caption) {
+		EntityManager em = emf.createEntityManager();
+
+		em.getTransaction().begin();
+		VoteOption vo = em
+				.createQuery("SELECT o FROM VoteOption o WHERE o.poll.id = :poll_id AND o.caption = :caption",
+						VoteOption.class)
+				.setParameter("poll_id", pollId)
+				.setParameter("caption", caption)
+				.getSingleResult();
+
+		Vote v = new Vote(vo);
 		em.persist(v);
 
 		// Invalidate/remove voteOptionCount for specific vote

@@ -31,7 +31,7 @@ public class Vote {
 
 	Instant publishedAt;
 
-	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	VoteOption votesOn;
 
 	public Vote(User voter, VoteOption voteOption) {
@@ -39,6 +39,12 @@ public class Vote {
 		this.votesOn = voteOption;
 		this.publishedAt = Instant.now();
 		this.voter.votesGiven.add(this);
+	}
+
+	public Vote(VoteOption voteOption) {
+		this.voter = null;
+		this.votesOn = voteOption;
+		this.publishedAt = Instant.now();
 	}
 
 	public Vote() {
