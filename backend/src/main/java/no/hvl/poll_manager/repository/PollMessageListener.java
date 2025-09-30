@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 
 @Component
@@ -12,6 +13,11 @@ public class PollMessageListener implements ChannelAwareMessageListener {
 
 	@Autowired
 	private PollManager pollManager;
+	private Gson gson;
+
+	public PollMessageListener() {
+		this.gson = new Gson();
+	}
 
 	@Override
 	public void onMessage(Message message, Channel channel) throws Exception {
@@ -21,14 +27,18 @@ public class PollMessageListener implements ChannelAwareMessageListener {
 			channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
 			return;
 		}
-		String routingKey = message.getMessageProperties().getReceivedRoutingKey();
-
-		if (routingKey.matches("^poll\\.\\d+$")) {
-			Integer pollId = Integer.parseInt(routingKey.substring(5));
-			pollManager.addVoteForPollAnonymous(pollId, messageBody);
-		} else {
-			System.out.println("Invalid routing key: " + routingKey);
+		try {
+			PollMessage m = gson.fromJson(messageBody, PollMessage.class);
+			if (m != null) {
+				pollManager.addVoteForPollAnonymous(m.pollId, m.caption);
+				channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-		channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+
+	}
+
+	private record PollMessage(Integer pollId, String caption) {
 	}
 }

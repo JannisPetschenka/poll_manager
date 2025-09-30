@@ -128,8 +128,7 @@ public class PollManager {
 	}
 
 	private void createRabbitTopic(int pollId) {
-		String routingKey = "poll." + pollId;
-		rabbitTemplate.convertAndSend("pollsExchange", routingKey, "New poll created with ID: " + pollId);
+		rabbitTemplate.convertAndSend("pollsExchange", "", "New poll created with ID: " + pollId);
 	}
 
 	public List<Poll> getPolls() {
@@ -235,8 +234,7 @@ public class PollManager {
 		// Invalidate/remove voteOptionCount for specific vote
 		jedis.del("poll:" + vo.getPoll().getId());
 
-		String routingKey = "poll." + vo.getPoll().getId();
-		rabbitTemplate.convertAndSend("pollsExchange", routingKey, "New vote on poll: " + vo.getPoll().getId() + " with option: "+vo.getCaption());
+		rabbitTemplate.convertAndSend("pollsExchange", "", "New vote on poll: " + vo.getPoll().getId() + " with option: "+vo.getCaption());
 
 		em.getTransaction().commit();
 		em.close();
